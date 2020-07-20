@@ -3,6 +3,7 @@ const cors = require('cors');
 
 const router = require('./routes/routes');
 const products = require('./routes/products');
+const swagger = require('./utils/swaggerConfig');
 
 const app = express();
 
@@ -13,5 +14,11 @@ app.use(cors());
 
 app.use(router);
 app.use(products);
+app.use(swagger);
+
+// app.get('/api-doc', function(req, res) {
+//     res.setHeader('Content-Type', 'application/json');
+//     res.send(swagger);
+// });
 
 module.exports = app;
