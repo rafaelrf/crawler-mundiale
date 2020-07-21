@@ -12,13 +12,8 @@ app.use(express.json());
 app.use(express.json({ type: 'application/vnd.api+json' }));
 app.use(cors());
 
-app.use(router);
-app.use(products);
+app.use('/', router);
+app.use('/api', products);
 app.use(swagger);
-
-// app.get('/api-doc', function(req, res) {
-//     res.setHeader('Content-Type', 'application/json');
-//     res.send(swagger);
-// });
 
 module.exports = app;
