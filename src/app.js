@@ -4,6 +4,7 @@ const cors = require('cors');
 const router = require('./routes/routes');
 const products = require('./routes/products');
 const swagger = require('./utils/swaggerConfig');
+const crawl = require('./service/crawler');
 
 const app = express();
 
@@ -16,4 +17,5 @@ app.use('/', router);
 app.use('/api', products);
 app.use(swagger);
 
+console.log(crawl('cadeado'));
 module.exports = app;
