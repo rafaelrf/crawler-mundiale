@@ -17,5 +17,5 @@ app.use('/', router);
 app.use('/api', products);
 app.use(swagger);
 
-console.log(crawl('cadeado'));
+console.log(crawl({ search: 'cadeado', limit: 1 }));
 module.exports = app;
