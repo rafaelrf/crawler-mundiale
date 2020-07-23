@@ -13,9 +13,9 @@ const getProductsLink = async (req, res) => {
   });
 };
 
-const crawl = (req, res) {
+const crawl = async (req, res) => {
   const objProducts = [];
-  const requests = getProductsLink(req, res);
+  const requests = await getProductsLink(req, res);
   return requests.forEach((request) => {
     request.then((response) => {
       const $$ = cheerio.load(response.data);
@@ -28,7 +28,8 @@ const crawl = (req, res) {
           .attr('href').split('br/')
           .pop()
           .replace('+', ' '),
-        state: $$('div.layout-description-wrapper').find('div.item-conditions').text().split('-')
+        state: $$('div.layout-description-wrapper').find('div.item-conditions')
+          .text().split('-')
           .shift()
           .trim(),
       });
