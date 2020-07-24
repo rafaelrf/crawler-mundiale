@@ -18,31 +18,25 @@ const getProductsLink = async (req, res) => axiosInstance.get(req.search).then((
   return res;
 });
 
-const crawl = async (req) => {
-  const objProducts = [];
-  return getProductsLink(req, []).then((products) => {
-    products.forEach((product) => product.then((response) => {
-      if (response) {
-        const $$ = cheerio.load(response.data);
+const crawl = async (req) => getProductsLink(req, [])
+  .then((requests) => requests.reduce((products, product) => products
+    .then((response) => product.then((result) => {
+      const $$ = cheerio.load(result.data);
 
-        objProducts.push({
-          name: $$('div.layout-description-wrapper').find('h1.item-title__primary').text().trim(),
-          link: $$('link[rel="canonical"]').attr('href'),
-          price: parseFloat($$('div.layout-description-wrapper').find('span.price-tag-symbol')
-            .attr('content').trim()),
-          store: $$('div.layout-description-wrapper').find('a#seller-view-more-link')
-            .attr('href').split('br/')
-            .pop()
-            .replace('+', ' '),
-          state: $$('div.layout-description-wrapper').find('div.item-conditions')
-            .text().split('-')
-            .shift()
-            .trim(),
-        });
-      }
-    }));
-    return objProducts;
-  });
-};
+      return [...response, {
+        name: $$('div.layout-description-wrapper').find('h1.item-title__primary').text().trim(),
+        link: $$('link[rel="canonical"]').attr('href'),
+        price: parseFloat($$('div.layout-description-wrapper').find('span.price-tag-symbol')
+          .attr('content').trim()),
+        store: $$('div.layout-description-wrapper').find('a#seller-view-more-link')
+          .attr('href').split('br/')
+          .pop()
+          .replace('+', ' '),
+        state: $$('div.layout-description-wrapper').find('div.item-conditions')
+          .text().split('-')
+          .shift()
+          .trim(),
+      }];
+    })), Promise.resolve([])));
 
 module.exports = crawl;
